@@ -1,0 +1,27 @@
+{
+    "name": "421p/talker-server",
+    "description": "TTS Server",
+    "minimum-stability": "dev",
+    "type": "library",
+    "version": "1.0.0",
+    "require-dev": {
+        "symfony/var-dumper": "^4.1"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Talker\\" : "src"
+        }
+    },
+    "authors": [
+        {
+            "name": "Andrii Bakal",
+            "email": "andrew.bakal@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1",
+        "react/http": "^0.8.3",
+        "421p/talker": "1.0.0"
+    }
+}
