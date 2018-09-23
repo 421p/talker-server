@@ -27,25 +27,29 @@ class Server
 
     private function createServer(): \React\Http\Server
     {
-        return new \React\Http\Server(
-            function (ServerRequestInterface $request) {
+        return new \React\Http\Server(\Closure::fromCallable([$this, 'handleRequest']));
+    }
 
-                $body = $request->getParsedBody();
+    protected function handleRequest(ServerRequestInterface $request) {
+        $body = $request->getParsedBody();
 
-                $defer = new Deferred();
+        $defer = new Deferred();
 
-                $this->talker->say($body['text'], $body['locale'])->then(
-                    function (AudioFile $file) use ($defer) {
-                        $defer->resolve(new Response(
-                            200,
-                            ['Content-Type' => 'audio/mpeg'],
-                            $file->getContent()
-                        ));
-                    }
-                );
-
-                return $defer->promise();
+        $this->talker->say($body['text'], $body['locale'])->then(
+            function (AudioFile $file) use ($defer) {
+                $defer->resolve($this->createResponse($file));
             }
+        );
+
+        return $defer->promise();
+    }
+    
+    protected function createResponse(AudioFile $file): Response
+    {
+        return new Response(
+            200,
+            ['Content-Type' => 'audio/mpeg'],
+            $file->getContent()
         );
     }
 
